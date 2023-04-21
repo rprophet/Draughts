@@ -1,0 +1,1047 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--writen by Luo Xiao 2020-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="style/main.css" rel="stylesheet" type="text/css" />
+<title>Draughts</title>
+<script language="javascript">
+var boarda=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+nowplay=1;
+stoneclr=["stonew.png","stonebl.png"];
+stonekclr=["stonekw.png","stonekbl.png"];
+wmoveimg="stonem.png";
+estoneimg=["stonewe.png","stoneble.png"];
+ekstoneimg=["stonekwe.png","stonekble.png"];
+var sltstone=-1
+var ustonea=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+var peata=[[[6,11]],
+		[[6,10],[7,12]],
+		[[7,11],[8,13]],
+		[[8,12],[9,14]],
+		[[9,13]],
+		[[10,16]],
+		[[10,15],[11,17]],
+		[[11,16],[12,18]],
+		[[12,17],[13,19]],
+		[[13,18]],
+		[[6,1],[16,21]],
+		[[6,0],[7,2],[16,20],[17,22]],
+		[[7,1],[8,3],[17,21],[18,23]],
+		[[8,2],[9,4],[18,22],[19,24]],
+		[[9,3],[19,23]],
+		[[10,6],[20,26]],
+		[[10,5],[11,7],[20,25],[21,27]],
+		[[11,6],[12,8],[21,26],[22,28]],
+		[[12,7],[13,9],[22,27],[23,29]],
+		[[13,8],[23,28]],
+		[[16,11],[26,31]],
+		[[16,10],[17,12],[26,30],[27,32]],
+		[[17,11],[18,13],[27,31],[28,33]],
+		[[18,12],[19,14],[28,32],[29,34]],
+		[[19,13],[29,33]],
+		[[20,16],[30,36]],
+		[[20,15],[21,17],[30,35],[31,37]],
+		[[21,16],[22,18],[31,36],[32,38]],
+		[[22,17],[23,19],[32,37],[33,39]],
+		[[23,18],[33,38]],
+		[[26,21],[36,41]],
+		[[26,20],[27,22],[36,40],[37,42]],
+		[[27,21],[28,23],[37,41],[38,43]],
+		[[28,22],[29,24],[38,42],[39,44]],
+		[[29,23],[39,43]],
+		[[30,26],[40,46]],
+		[[30,25],[31,27],[40,45],[41,47]],
+		[[31,26],[32,28],[41,46],[42,48]],
+		[[32,27],[33,29],[42,47],[43,49]],
+		[[33,28],[43,48]],
+		[[36,31]],
+		[[36,30],[37,32]],
+		[[37,31],[38,33]],
+		[[38,32],[39,34]],
+		[[39,33]],
+		[[40,36]],
+		[[40,35],[41,37]],
+		[[41,36],[42,38]],
+		[[42,37],[43,39]],
+		[[43,38]]]; 
+var pmovea=[[[],[5,6]],
+			[[],[6,7]],
+			[[],[7,8]],
+			[[],[8,9]],
+			[[],[9]],
+			[[0],[10]],
+			[[0,1],[10,11]],
+			[[1,2],[11,12]],
+			[[2,3],[12,13]],
+			[[3,4],[13,14]],
+			[[5,6],[15,16]],
+			[[6,7],[16,17]],
+			[[7,8],[17,18]],
+			[[8,9],[18,19]],
+			[[9],[19]],
+			[[10],[20]],
+			[[10,11],[20,21]],
+			[[11,12],[21,22]],
+			[[12,13],[22,23]],
+			[[13,14],[23,24]],
+			[[15,16],[25,26]],
+			[[16,17],[26,27]],
+			[[17,18],[27,28]],
+			[[18,19],[28,29]],
+			[[19],[29]],
+			[[20],[30]],
+			[[20,21],[30,31]],
+			[[21,22],[31,32]],
+			[[22,23],[32,33]],
+			[[23,24],[33,34]],
+			[[25,26],[35,36]],
+			[[26,27],[36,37]],
+			[[27,28],[37,38]],
+			[[28,29],[38,39]],
+			[[29],[39]],
+			[[30],[40]],
+			[[30,31],[40,41]],
+			[[31,32],[41,42]],
+			[[32,33],[42,43]],
+			[[33,34],[43,44]],
+			[[35,36],[45,46]],
+			[[36,37],[46,47]],
+			[[37,38],[47,48]],
+			[[38,39],[48,49]],
+			[[39],[49]],
+			[[40],[]],
+			[[40,41],[]],
+			[[41,42],[]],
+			[[42,43],[]],
+			[[43,44],[]]]; 
+var kmovea=[[[6,11,17,22,28,33,39,44],[5],[],[]],
+			[[7,12,18,23,29,34],[6,10,15],[],[]],
+			[[8,13,19,24],[7,11,16,20,25],[],[]],
+			[[9,14],[8,12,17,21,26,30,35],[],[]],
+			[[],[9,13,18,22,27,31,36,40,45],[],[]],
+			[[10,16,21,27,32,38,43,49],[],[0],[]],
+			[[11,17,22,28,33,39,44],[10,15],[1],[0]],
+			[[12,18,23,29,34],[11,16,20,25],[2],[1]],
+			[[13,19,24],[12,17,21,26,30,35],[3],[2]],
+			[[14],[13,18,22,27,31,36,40,45],[4],[3]],
+			[[16,21,27,32,38,43,49],[15],[6,1],[5]],
+			[[17,22,28,33,39,44],[16,20,25],[7,2],[6,0]],
+			[[18,23,29,34],[17,21,26,30,35],[8,3],[7,1]],
+			[[19,24],[18,22,27,31,36,40,45],[9,4],[8,2]],
+			[[],[19,23,28,32,37,41,46],[],[9,3]],
+			[[20,26,31,37,42,48],[],[10,6,1],[]],
+			[[21,27,32,38,43,49],[20,25],[11,7,2],[10,5]],
+			[[22,28,33,39,44],[21,26,30,35],[12,8,3],[11,6,0]],
+			[[23,29,34],[22,27,31,36,40,45],[13,9,4],[12,7,1]],
+			[[24],[23,28,32,37,41,46],[14],[13,8,2]],
+			[[26,31,37,42,48],[25],[16,11,7,2],[15]],
+			[[27,32,38,43,49],[26,30,35],[17,12,8,3],[16,10,5]],
+			[[28,33,39,44],[27,31,36,40,45],[18,13,9,4],[17,11,6,0]],
+			[[29,34],[28,32,37,41,46],[19,14],[18,12,7,1]],
+			[[],[29,33,38,42,47],[],[19,13,8,2]],
+			[[30,36,41,47],[],[20,16,11,7,2],[]],
+			[[31,37,42,48],[30,35],[21,17,12,8,3],[20,15]],
+			[[32,38,43,49],[31,36,40,45],[22,18,13,9,4],[21,16,10,5]],
+			[[33,39,44],[32,37,41,46],[23,19,14],[22,17,11,6,0]],
+			[[34],[33,38,42,47],[24],[23,18,12,7,1]],
+			[[36,41,47],[35],[26,21,17,12,8,3],[25]],
+			[[37,42,48],[36,40,45],[27,22,18,13,9,4],[26,20,15]],
+			[[38,43,49],[37,41,46],[28,23,19,14],[27,21,16,10,5]],
+			[[39,44],[38,42,47],[29,24],[28,22,17,11,6,0]],
+			[[],[39,43,48],[],[29,23,18,12,7,1]],
+			[[40,46],[],[30,26,21,17,12,8,3],[]],
+			[[41,47],[40,45],[31,27,22,18,13,9,4],[30,25]],
+			[[42,48],[41,46],[32,28,23,19,14],[31,26,20,15]],
+			[[43,49],[42,47],[33,29,24],[32,27,21,16,10,5]],
+			[[44],[43,48],[34],[33,28,22,17,11,6,0]],
+			[[46],[45],[36,31,27,22,18,13,9,4],[35]],
+			[[47],[46],[37,32,28,23,19,14],[36,30,25]],
+			[[48],[47],[38,33,29,24],[37,31,26,20,15]],
+			[[49],[48],[39,34],[38,32,27,21,16,10,5]],
+			[[],[49],[],[39,33,28,22,17,11,6,0]],
+			[[],[],[40,36,31,27,22,18,13,9,4],[]],
+			[[],[],[41,37,32,28,23,19,14],[40,35]],
+			[[],[],[42,38,33,29,24],[41,36,30,25]],
+			[[],[],[43,39,34],[42,37,31,26,20,15]],
+			[[],[],[44],[43,38,32,27,21,16,10,5]]];
+var boardvd=[9,9,9,9,9,
+			9,9,9,9,9,
+			8,9,9,9,8,
+			7,8,9,9,7,
+			6,8,9,7,6,
+			5,6,8,7,5,
+			4,6,6,5,4,
+			3,4,4,4,3,
+			2,2,2,2,2,
+			0,0,0,0,0];
+
+var boardvu=[0,0,0,0,0,
+			-2,-2,-2,-2,-2,
+			-3,-4,-4,-4,-3,
+			-4,-5,-6,-6,-4,
+			-5,-7,-8,-6,-5,
+			-6,-7,-9,-8,-6,
+			-7,-9,-9,-8,-7,
+			-8,-9,-9,-9,-8,
+			-9,-9,-9,-9,-9,
+			-9,-9,-9,-9,-9]; 
+var smovea=[];
+var semovea=[];
+var sestonea=[];
+var mstep=1;
+var amove=[];
+var aestone=[];
+var nowmove=[];
+var estep=0;
+var clkeata=[];
+var cestep=0;
+var sboarda=[];
+var sdeep=5;
+var clkbm=1;
+var gamestep=0;
+var spoint=0;
+var cuttime=0;
+function rid(id) {
+	return document.getElementById(id);
+}
+function formatboard(){
+	for(n=0;n<20;n++){
+		boarda[n]=-1;
+		rid("clk"+n).className="";
+	}
+	for(n=20;n<30;n++){
+		boarda[n]=0;
+		rid("clk"+n).className="";
+	}
+	for(n=30;n<50;n++){
+		boarda[n]=1;
+		rid("clk"+n).className="";
+	}
+	for(n=0;n<smovea.length;n++){
+		rid("clk"+smovea[n][0]).className="pointer";
+	}
+	
+}
+function printboard(){
+	for(n=0;n<50;n++){
+		if(boarda[n]!=0){
+			
+			if(boarda[n]==1){
+				rid("stn"+n).innerHTML='<img src="images/'+stoneclr[0]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}else if(boarda[n]==-1){
+				rid("stn"+n).innerHTML='<img src="images/'+stoneclr[1]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}else if(boarda[n]==10){
+				rid("stn"+n).innerHTML='<img src="images/'+stonekclr[0]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}else if(boarda[n]==-10){
+				rid("stn"+n).innerHTML='<img src="images/'+stonekclr[1]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}else if(boarda[n]==500){
+				rid("stn"+n).innerHTML='<img src="images/'+estoneimg[0]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}
+			else if(boarda[n]==-500){
+				rid("stn"+n).innerHTML='<img src="images/'+estoneimg[1]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}else if(boarda[n]==5000){
+				rid("stn"+n).innerHTML='<img src="images/'+ekstoneimg[0]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}
+			else if(boarda[n]==-5000){
+				rid("stn"+n).innerHTML='<img src="images/'+ekstoneimg[1]+'">';
+				rid("shd"+n).innerHTML='<img src="images/shadow.png">';
+			}else if(boarda[n]==1000){
+				rid("stn"+n).innerHTML='<img src="images/'+wmoveimg+'">';
+				rid("clk"+n).className="pointer";
+			}
+		}else{
+			rid("shd"+n).innerHTML='';
+			rid("stn"+n).innerHTML='';
+			rid("clk"+n).className="";
+		}
+	}
+}
+function restart(){
+	
+	formatboard();
+	printboard();
+	nowplay=1;
+	gamestep=0;
+	makemove();
+	addpointer();
+	if(stoneclr[0]=="stonebl.png"){
+		gamestep=-1;
+		changeplayer();
+	}
+}
+function clk(n){
+	if(nowplay==1){
+		if(boarda[n]>0&&boarda[n]<1000){
+			if(isamstone(n)){
+				sltstone=n;
+				
+				printwmove(n);
+			}else{
+				if(cestep==0){
+					cleanwmove();
+				}
+			}
+			
+			
+		}else if(boarda[n]==1000&&sltstone!=-1){
+			if(ismove(sltstone,n)){
+				a=sltstone;
+				b=n;
+				stonemove(a,b);
+				cleanwmove();
+				if(semovea.length>0){
+					stoneeat(a,b);
+					if(mstep>1){
+						cestep=1;
+						clkeata=[a,b];
+						printwmove2(cestep,b);
+					}else{
+						cleaneatstone();
+						uptoking(n);
+						changeplayer();
+					}
+					
+				}else{
+					uptoking(n);
+					changeplayer();
+				}
+				
+			}else{
+				
+			}
+				
+		}else if(boarda[n]==1000&&cestep>0){
+				cestep++;
+				clkeata.push(n);
+				printwmove2(cestep,n);
+				stonemove(clkeata[clkeata.length-2],n);
+				stoneeat(clkeata[clkeata.length-2],n)
+	
+				if(cestep==mstep){
+					cleaneatstone();
+					cestep=0;
+					uptoking(clkeata[clkeata.length-1]);
+					
+					clkeata=[];
+					
+					changeplayer();
+				}
+			
+			
+		}else{
+				
+		}
+	}
+}
+function uptoking(p){
+	if(p<5&&boarda[p]==1&&cestep==0){
+		boarda[p]=10;
+	}
+	if(p>44&&boarda[p]==-1&&cestep==0){
+		boarda[p]=-10;
+	}
+	printboard();
+	
+	
+}
+function changeplayer(){
+	gamestep++;
+	if(gamestep==1&&nowplay==1){
+		rid("button").src="images/restart.png";
+		clkbm=0;
+	}
+	if(gamestep==2&&nowplay==1){
+		rid("button").src="images/restart.png";
+		clkbm=0;
+	}
+	if(nowplay==1){
+		nowplay=-1;
+		cleanpointer();
+		upplay();
+	}else if(nowplay==-1){
+		nowplay=1;
+		makemove();
+		if(semovea.length==0&&smovea.length==0){
+			toend();
+		}else{
+			addpointer();
+		}
+		
+	}
+}
+function upplay(){
+	makemove();
+	if(semovea.length==0&&smovea.length==0){
+		toend();
+	}else{
+		if(semovea.length==1){
+			nowmove=[semovea[0].concat(),sestonea[0].concat()];
+		}else if(smovea.length==1){
+			nowmove=[smovea[0].concat(),[]];
+		}else{
+			spoint=0;
+			cuttime=0;
+			searchmove(0,10000,-10000);
+		}
+	}
+	domove();
+	
+}
+function makemove(){
+	semovea=[];
+	sestonea=[];
+	smovea=[];
+	mstep=0;
+	if(nowplay==1){
+		var s1=1;
+		var s2=10;
+		var mc=0;
+	}else{
+		var s1=-1;
+		var s2=-10;
+		var mc=1;
+	}
+	for(var n=0;n<50;n++){	
+		if(boarda[n]==s1){
+			amove=[n];
+			sclr=boarda[n];
+			boarda[n]=0;
+			makepeatmove(sclr,-1,n);
+			boarda[n]=sclr;
+		}else if(boarda[n]==s2){
+			amove=[n];
+			sclr=boarda[n];
+			boarda[n]=0;
+			makekeatmove(sclr,-1,n);
+			boarda[n]=sclr;
+		}
+	}
+	if(semovea.length==0){
+		mstep=1;
+		for(var n=0;n<50;n++){	
+			if(boarda[n]==s1){
+				makefmove(mc,n);
+			}else if(boarda[n]==s2){
+				makekmove(n);
+			}
+		}			
+	}
+	
+	
+}
+
+function makepeatmove(clr,sf,ss){
+	re=false;
+	for(var n=0;n<peata[ss].length;n++){
+		if(boarda[peata[ss][n][0]]*clr<0&&boarda[peata[ss][n][1]]==0&&peata[ss][n][1]!=sf){
+			isnorepeat=true;
+			for(var m=0;m<aestone.length;m++){
+				if(aestone[m]==peata[ss][n][0]){
+					isnorepeat=false;
+					break;
+				}
+			}
+			if(isnorepeat){
+				amove.push(peata[ss][n][1]);
+				aestone.push(peata[ss][n][0]);
+				makepeatmove(clr,ss,peata[ss][n][1]);
+				re=true;
+				amove.pop();
+				aestone.pop();
+			}
+		}
+	}
+	if(!re){
+		if(amove.length>1){
+			if(amove.length-1>mstep){
+				mstep=amove.length-1;
+				semovea=[];
+				sestonea=[];
+				var pmove=amove.concat();  
+				semovea.push(pmove);
+				var pestone=aestone.concat(); 
+				sestonea.push(pestone);
+			}else if(amove.length-1==mstep){
+				var pmove=amove.concat();  
+				
+				var pestone=aestone.concat(); 
+				noerepeat=true;
+				for(var x=0;x<sestonea.length;x++){
+					if(pmove[0]==semovea[x][0]&&pmove[pmove.length-1]==semovea[x][semovea[x].length-1]){
+						
+						var estone1=pestone.concat();
+						estone1.sort();
+						
+						var estone2=sestonea[x].concat();
+						estone2.sort();
+						
+						samees=true;
+						for(var y=0;y<estone1.length;y++){
+							if(estone1[y]!=estone2[y]){
+								samees=false;
+								
+								break;
+							}
+						}
+						if(samees){
+							noerepeat=false;
+							
+							break;
+						}
+					}
+				}
+				if(noerepeat){
+					semovea.push(pmove);
+					sestonea.push(pestone);	
+				}
+				
+			}
+			
+		}
+	}
+	
+}
+function makekeatmove(clr,sd,ss){
+	
+	var re=false;
+	for(var n=0;n<4;n++){
+		
+		if(n!=sd){
+			var afteres=false;
+			
+			for(var m=0;m<kmovea[ss][n].length;m++){
+				
+				if(afteres){
+					if(boarda[kmovea[ss][n][m]]==0){
+						isnorepeat=true;
+						for(var x=0;x<aestone.length;x++){
+							if(aestone[x]==es){
+								isnorepeat=false;
+								break;
+							}
+						}
+						if(isnorepeat){
+							re=true;
+							aestone.push(es);
+							amove.push(kmovea[ss][n][m]);
+							if(n==0){
+								tsd=3;
+							}else if(n==1){
+								tsd=2;
+							}else if(n==2){
+								tsd=1;
+							}else if(n==3){
+								tsd=0;
+							}
+							makekeatmove(clr,tsd,kmovea[ss][n][m]);
+							amove.pop();
+							aestone.pop();
+						}else{
+							break;
+						}
+					}else{
+						
+						break;
+					}
+				}else{
+					if(boarda[kmovea[ss][n][m]]!=0){
+						if(boarda[kmovea[ss][n][m]]*clr<0&&!afteres){
+							if(m<kmovea[ss][n].length-1){
+								if(boarda[kmovea[ss][n][m+1]]==0){
+									var es=kmovea[ss][n][m];
+									
+									afteres=true;
+									
+								}else{
+									
+									break;
+								}	
+							}
+
+						}else{
+							
+							break;
+						}
+
+					}
+				}
+				
+				
+			}
+		}
+		
+	}
+	if(!re){
+		if(amove.length>1){
+			
+			if(amove.length-1>mstep){
+				mstep=amove.length-1;
+				semovea=[];
+				sestonea=[];
+				var pmove=amove.concat();  
+				semovea.push(pmove);
+				var pestone=aestone.concat(); 
+				sestonea.push(pestone);
+			}else if(amove.length-1==mstep){
+				
+				var pmove=amove.concat();  
+				
+				var pestone=aestone.concat(); 
+				noerepeat=true;
+				if(nowplay==-1){
+					for(var x=0;x<sestonea.length;x++){
+						if(pmove[0]==semovea[x][0]&&pmove[pmove.length-1]==semovea[x][semovea[x].length-1]){
+							
+							var estone1=pestone.concat();
+							estone1.sort();
+							
+							var estone2=sestonea[x].concat();
+							estone2.sort();
+							
+							samees=true;
+							for(var y=0;y<estone1.length;y++){
+								if(estone1[y]!=estone2[y]){
+									samees=false;
+									break;
+								}
+							}
+							if(samees){
+								noerepeat=false;
+								
+								break;
+							}
+						}
+					}
+				}
+				if(noerepeat){
+					
+					semovea.push(pmove);
+					sestonea.push(pestone);	
+				}
+				
+			}
+		}
+	}
+}
+function makefmove(c,p){
+	
+	for(var n=0;n<pmovea[p][c].length;n++){
+		
+		if(boarda[pmovea[p][c][n]]==0){
+			var pmove=[p,pmovea[p][c][n]];
+			
+			smovea.push(pmove.concat());
+			
+		}
+		
+	}
+}
+function makekmove(kp){
+	
+	for(var n=0;n<kmovea[kp].length;n++){
+		
+		for(var m=0;m<kmovea[kp][n].length;m++){
+			
+			if(boarda[kmovea[kp][n][m]]==0){
+				var pmove=[kp,kmovea[kp][n][m]];
+				smovea.push(pmove.concat());
+				
+			}else{
+				break
+			}
+		}
+		
+	}
+}
+function simplemove(){
+	
+}
+function randommove(){
+	
+	if(semovea.length==1){
+		return [semovea[0],sestonea[0]];
+	}else if(semovea.length>0){
+		rn=Math.floor(Math.random() * semovea.length);
+		
+		return [semovea[rn],sestonea[rn]];	
+	}else if(smovea.length==1){
+		return [smovea[0],[]];
+	}if(smovea.length>0){
+		return [smovea[Math.floor(Math.random() * smovea.length)],[]];	
+	}else{
+		return [];
+	}
+}
+function searchmove(sdp,smax,smin){
+	var nsmax=smax;
+	var nsmin=smin;
+	makemove();
+	if(semovea.length==0&&smovea.length==0){
+		return nowplay*-5000;
+		
+	}else if(sdp>=sdeep){
+		if(semovea.length==0){
+			gv=gamevalue();
+			return gv;
+		}
+	}
+		if(semovea.length!=0){
+			var shmovea=semovea.concat(); 
+		}else{
+			var shmovea=smovea.concat(); 
+		}
+		
+		var ssestonea=sestonea.concat(); 
+		sboarda.push(boarda.concat());
+		nowplay*=-1;
+		var mvalue=nowplay*10000;
+		var moven=-1;
+		var sd=sdp;
+		if(semovea.length<1){
+			sd++;
+		}else{
+			
+		}
+		for(var n=0;n<shmovea.length;n++){
+			boarda[shmovea[n][shmovea[n].length-1]]=boarda[shmovea[n][0]];
+			boarda[shmovea[n][0]]=0;
+			
+			p=shmovea[n][shmovea[n].length-1];
+			if(p<5&&boarda[p]==1){
+				boarda[p]=10;
+			}
+			if(p>44&&boarda[p]==-1){
+				boarda[p]=-10;
+			}
+			
+			if(ssestonea.length!=0){
+				for(var m=0;m<ssestonea[n].length;m++){
+					boarda[ssestonea[n][m]]=0;
+				}
+				
+			}
+			
+			gvalue=searchmove(sd,nsmax,nsmin);
+			boarda=sboarda[sboarda.length-1].concat();
+			
+			if(nowplay>0){
+				if(gvalue<nsmin){
+					mvalue=gvalue;
+					moven=n;
+					break;
+				}else{
+					if(gvalue<mvalue){
+						mvalue=gvalue;
+						nsmax=mvalue;
+						moven=n;
+					}
+				}
+				
+			}else{
+				if(gvalue>nsmax){
+					mvalue=gvalue;
+					moven=n;
+					break;
+				}else{
+					if(gvalue>mvalue){
+						mvalue=gvalue;
+						nsmin=mvalue;
+						moven=n;
+					}
+				}
+			}
+			
+	
+		}
+		
+		nowplay*=-1;
+		sboarda.pop();
+		
+		if(sdp==0){
+			if(ssestonea.length!=0){
+				nowmove=[shmovea[moven].concat(),ssestonea[moven].concat()];
+			}else{
+				nowmove=[shmovea[moven].concat(),[]];
+			}
+			mstep=shmovea[moven].length-1;
+			
+		}
+		return mvalue;
+	
+}
+function gamevalue(){
+	v1=0;
+	v2=0;
+	v3=0;
+	for(var n=0;n<50;n++){
+		v1+=boarda[n];
+		if(boarda[n]==1||boarda[n]==-1){
+			for(var x=0;x<peata[n].length;x++){
+				if(boarda[peata[n][x][0]]==0){
+					
+					v2+=boarda[n];
+				}
+			}
+			if(boarda[n]==1){
+				v3+=boardvd[n];
+			}else{
+				v3+=boardvu[n];
+			}
+			
+		}else if(boarda[n]==10||boarda[n]==-10){
+			v2+=kmovea[n][0].length+kmovea[n][1].length+kmovea[n][2].length+kmovea[n][3].length;
+		}
+	}
+	v1=v1*20;
+	
+	return v1+v2+v3;
+}
+function choosemove(){
+	
+	if(semovea.length==1){
+		return [semovea[0],sestonea[0]];
+	}else if(semovea.length>0){
+		rn=Math.floor(Math.random() * semovea.length);
+		
+		return [semovea[rn],sestonea[rn]];	
+	}else if(smovea.length==1){
+		return [smovea[0],[]];
+	}if(smovea.length>0){
+		return [smovea[Math.floor(Math.random() * smovea.length)],[]];	
+	}else{
+		return [];
+	}
+}
+function domove(){
+	
+	if(nowmove.length==2){
+		
+		if(nowmove[1].length==0){
+			
+			stonemove(nowmove[0][0],nowmove[0][1]);
+			uptoking(nowmove[0][1]);
+			changeplayer();
+		}else{
+			
+			estep=0;
+			eatmove();
+		}
+	}
+}
+function eatmove(){
+	
+	if(mstep>estep){
+		
+		stonemove(nowmove[0][estep],nowmove[0][estep+1]);
+		eatstone(nowmove[1][estep]);
+		estep++;
+		setTimeout(eatmove,1000);
+	
+	}else if(mstep==estep){
+		uptoking(nowmove[0][nowmove[0].length-1]);
+		cleaneatstone();
+		changeplayer();
+	}
+}
+function cleaneatstone(){
+	for(n=0;n<50;n++){
+		if(boarda[n]==500||boarda[n]==-500||boarda[n]==5000||boarda[n]==-5000){
+			boarda[n]=0;
+			
+		}
+	}
+	printboard();
+}
+function eatstone(es){
+	if(boarda[es]==1){
+		boarda[es]=500;
+	}else if(boarda[es]==-1){
+		boarda[es]=-500;
+	}else if(boarda[es]==10){
+		boarda[es]=5000;
+	}else if(boarda[es]==-10){
+		boarda[es]=-5000;
+	}
+	
+	printboard();
+}
+function isamstone(a){
+	for(n=0;n<smovea.length;n++){
+		if(smovea[n][0]==a) return true;
+	}
+	for(n=0;n<semovea.length;n++){
+		if(semovea[n][0]==a) return true;
+	}
+	return false;
+}
+function addpointer(){
+	for(n=0;n<smovea.length;n++){
+		rid("clk"+smovea[n][0]).className="pointer";
+	}
+	for(n=0;n<semovea.length;n++){
+		rid("clk"+semovea[n][0]).className="pointer";
+	}
+}
+function printwmove(a){
+	cleanwmoveimg();
+	for(n=0;n<smovea.length;n++){
+		if(smovea[n][0]==a){
+			
+			boarda[smovea[n][1]]=1000;
+		}
+	}
+	for(n=0;n<semovea.length;n++){
+		if(semovea[n][0]==a){
+			
+			boarda[semovea[n][1]]=1000;
+		}
+	}
+	printboard();
+}
+function printwmove2(est,ens){
+	cleanwmoveimg();
+	
+	if(est<=mstep){
+		
+		for(var n=0;n<semovea.length;n++){
+			
+			cn=0;
+			for(var x=0;x<=est;x++){
+				
+				if(semovea[n][x]==clkeata[x]) cn++;
+			}
+			
+			if(cn==est+1){
+				
+				if(est<mstep){
+					
+					boarda[semovea[n][est+1]]=1000;
+					
+				}
+				
+			}
+		}
+	}
+	printboard();
+}
+function cleanwmove(){
+	sltstone=-1;
+	cleanwmoveimg();
+}
+function cleanwmoveimg(){
+	for(n=0;n<50;n++){	
+		if(boarda[n]==1000){
+			boarda[n]=0;
+		}
+	}
+	printboard();
+}
+function cleanpointer(){
+	for(n=0;n<50;n++){	
+		rid("clk"+n).className="";
+	}
+}
+function ismove(a,b){
+	
+	for(n=0;n<smovea.length;n++){
+		if(smovea[n][0]==a&&smovea[n][1]==b) return true;
+	}
+	for(n=0;n<semovea.length;n++){
+		if(semovea[n][0]==a&&semovea[n][1]==b){
+			return true;
+		}
+	}
+	
+	return false;
+}
+function stoneeat(a,b){
+	
+	for(var x=0;x<semovea.length;x++){
+		
+		for(var y=0;y<semovea[x].length-1;y++){
+			if(semovea[x][y]==a&&semovea[x][y+1]==b){
+				
+				boarda[sestonea[x][y]]=-500;
+				printboard();
+				break;
+			}
+		}
+		
+	}
+}
+function stonemove(a,b){
+	
+	boarda[b]=boarda[a];
+	
+	boarda[a]=0;
+	sltstone=-1;
+	
+	printboard();
+}
+function toend(){
+	if(nowplay==1){
+		alert("You Lose!");
+		rid("button").src="images/change.png";
+		clkbm=1;
+		restart();
+	}else if(nowplay==-1){
+		alert("You Win!");
+		rid("button").src="images/change.png";
+		clkbm=1;
+		restart();
+	}
+}
+function clkwhite(){
+	
+}
+function clkb(){
+	if(clkbm==0){
+		restart();
+		rid("button").src="images/change.png";
+		clkbm=1;
+	}else if(clkbm==1){
+		changestoneimg();
+		restart();
+		
+	}
+	
+}
+function changestoneimg(){
+	if(stoneclr[0]=="stonew.png"){
+	   stoneclr=["stonebl.png","stonew.png"];
+	    stonekclr=["stonekbl.png","stonekw.png"];
+	   	estoneimg=["stoneble.png","stonewe.png"];
+		ekstoneimg=["stonekble.png","stonekwe.png"];
+	}else{
+		stoneclr=["stonew.png","stonebl.png"];
+	    stonekclr=["stonekw.png","stonekbl.png"];
+	   	estoneimg=["stonewe.png","stoneble.png"];
+		ekstoneimg=["stonekwe.png","stonekble.png"];
+	}
+	
+}
+</script>
+</head>
+
+<body onload="restart();" >
+<div id="head">
+	<img id="logo" src="images/logo.png">
+	<img onClick="clkb();" id="button" src="images/change.png">
+	<div id='output'></div>
+</div>
+<div id="board">
+<table id="tb1" align="center"><tr><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>1</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>2</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>3</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>4</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>5</td></tr><tr><td align=right valign=bottom class=td3>6</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>7</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>8</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>9</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>10</td><td align=right valign=bottom> </td></tr><tr><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>11</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>12</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>13</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>14</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>15</td></tr><tr><td align=right valign=bottom class=td3>16</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>17</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>18</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>19</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>20</td><td align=right valign=bottom> </td></tr><tr><td align=right valign=bottom> </td><td align=right valign=bottom class=td3 >21</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3 >22</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3 >23</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3 >24</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>25</td></tr><tr><td align=right valign=bottom class=td3>26</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3 >27</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>28</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3 >29</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3 >30</td><td align=right valign=bottom> </td></tr><tr><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>31</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>32</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>33</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>34</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>35</td></tr><tr><td align=right valign=bottom class=td3>36</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>37</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>38</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>39</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>40</td><td align=right valign=bottom> </td></tr><tr><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>41</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>42</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>43</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>44</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>45</td></tr><tr><td align=right valign=bottom class=td3>46</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>47</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>48</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>49</td><td align=right valign=bottom> </td><td align=right valign=bottom class=td3>50</td><td align=center valign=middle></td></tr></table><table id="tb2" cellpadding="0" cellspacing="0" align="center"><tr><td></td><td id="shd0" align="left" valign="top"></td><td></td><td id="shd1" align="left" valign="top"></td><td></td><td id="shd2" align="left" valign="top"></td><td></td><td id="shd3" align="left" valign="top"></td><td></td><td id="shd4" align="left" valign="top"></td></tr><tr><td id="shd5" align="left" valign="top"></td><td></td><td id="shd6" align="left" valign="top"></td><td></td><td id="shd7" align="left" valign="top"></td><td></td><td id="shd8" align="left" valign="top"></td><td></td><td id="shd9" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="shd10" align="left" valign="top"></td><td></td><td id="shd11" align="left" valign="top"></td><td></td><td id="shd12" align="left" valign="top"></td><td></td><td id="shd13" align="left" valign="top"></td><td></td><td id="shd14" align="left" valign="top"></td></tr><tr><td id="shd15" align="left" valign="top"></td><td></td><td id="shd16" align="left" valign="top"></td><td></td><td id="shd17" align="left" valign="top"></td><td></td><td id="shd18" align="left" valign="top"></td><td></td><td id="shd19" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="shd20" align="left" valign="top"></td><td></td><td id="shd21" align="left" valign="top"></td><td></td><td id="shd22" align="left" valign="top"></td><td></td><td id="shd23" align="left" valign="top"></td><td></td><td id="shd24" align="left" valign="top"></td></tr><tr><td id="shd25" align="left" valign="top"></td><td></td><td id="shd26" align="left" valign="top"></td><td></td><td id="shd27" align="left" valign="top"></td><td></td><td id="shd28" align="left" valign="top"></td><td></td><td id="shd29" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="shd30" align="left" valign="top"></td><td></td><td id="shd31" align="left" valign="top"></td><td></td><td id="shd32" align="left" valign="top"></td><td></td><td id="shd33" align="left" valign="top"></td><td></td><td id="shd34" align="left" valign="top"></td></tr><tr><td id="shd35" align="left" valign="top"></td><td></td><td id="shd36" align="left" valign="top"></td><td></td><td id="shd37" align="left" valign="top"></td><td></td><td id="shd38" align="left" valign="top"></td><td></td><td id="shd39" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="shd40" align="left" valign="top"></td><td></td><td id="shd41" align="left" valign="top"></td><td></td><td id="shd42" align="left" valign="top"></td><td></td><td id="shd43" align="left" valign="top"></td><td></td><td id="shd44" align="left" valign="top"></td></tr><tr><td id="shd45" align="left" valign="top"></td><td></td><td id="shd46" align="left" valign="top"></td><td></td><td id="shd47" align="left" valign="top"></td><td></td><td id="shd48" align="left" valign="top"></td><td></td><td id="shd49" align="left" valign="top"></td><td></td></tr></table><table id="tb3" cellpadding="0" cellspacing="0" align="center"><tr><td></td><td id="stn0" align="left" valign="top"></td><td></td><td id="stn1" align="left" valign="top"></td><td></td><td id="stn2" align="left" valign="top"></td><td></td><td id="stn3" align="left" valign="top"></td><td></td><td id="stn4" align="left" valign="top"></td></tr><tr><td id="stn5" align="left" valign="top"></td><td></td><td id="stn6" align="left" valign="top"></td><td></td><td id="stn7" align="left" valign="top"></td><td></td><td id="stn8" align="left" valign="top"></td><td></td><td id="stn9" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="stn10" align="left" valign="top"></td><td></td><td id="stn11" align="left" valign="top"></td><td></td><td id="stn12" align="left" valign="top"></td><td></td><td id="stn13" align="left" valign="top"></td><td></td><td id="stn14" align="left" valign="top"></td></tr><tr><td id="stn15" align="left" valign="top"></td><td></td><td id="stn16" align="left" valign="top"></td><td></td><td id="stn17" align="left" valign="top"></td><td></td><td id="stn18" align="left" valign="top"></td><td></td><td id="stn19" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="stn20" align="left" valign="top"></td><td></td><td id="stn21" align="left" valign="top"></td><td></td><td id="stn22" align="left" valign="top"></td><td></td><td id="stn23" align="left" valign="top"></td><td></td><td id="stn24" align="left" valign="top"></td></tr><tr><td id="stn25" align="left" valign="top"></td><td></td><td id="stn26" align="left" valign="top"></td><td></td><td id="stn27" align="left" valign="top"></td><td></td><td id="stn28" align="left" valign="top"></td><td></td><td id="stn29" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="stn30" align="left" valign="top"></td><td></td><td id="stn31" align="left" valign="top"></td><td></td><td id="stn32" align="left" valign="top"></td><td></td><td id="stn33" align="left" valign="top"></td><td></td><td id="stn34" align="left" valign="top"></td></tr><tr><td id="stn35" align="left" valign="top"></td><td></td><td id="stn36" align="left" valign="top"></td><td></td><td id="stn37" align="left" valign="top"></td><td></td><td id="stn38" align="left" valign="top"></td><td></td><td id="stn39" align="left" valign="top"></td><td></td></tr><tr><td></td><td id="stn40" align="left" valign="top"></td><td></td><td id="stn41" align="left" valign="top"></td><td></td><td id="stn42" align="left" valign="top"></td><td></td><td id="stn43" align="left" valign="top"></td><td></td><td id="stn44" align="left" valign="top"></td></tr><tr><td id="stn45" align="left" valign="top"></td><td></td><td id="stn46" align="left" valign="top"></td><td></td><td id="stn47" align="left" valign="top"></td><td></td><td id="stn48" align="left" valign="top"></td><td></td><td id="stn49" align="left" valign="top"></td><td></td></tr></table><table id="tb4" cellpadding="0" cellspacing="0" align="center"><tr><td onclick="clkwhite();"></td><td id="clk0" onclick="clk(0)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk1" onclick="clk(1)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk2" onclick="clk(2)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk3" onclick="clk(3)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk4" onclick="clk(4)" align="left" valign="top"></td></tr><tr><td id="clk5" onclick="clk(5)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk6" onclick="clk(6)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk7" onclick="clk(7)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk8" onclick="clk(8)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk9" onclick="clk(9)" align="left" valign="top"></td><td onclick="clkwhite();"></td></tr><tr><td onclick="clkwhite();"></td><td id="clk10" onclick="clk(10)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk11" onclick="clk(11)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk12" onclick="clk(12)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk13" onclick="clk(13)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk14" onclick="clk(14)" align="left" valign="top"></td></tr><tr><td id="clk15" onclick="clk(15)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk16" onclick="clk(16)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk17" onclick="clk(17)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk18" onclick="clk(18)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk19" onclick="clk(19)" align="left" valign="top"></td><td onclick="clkwhite();"></td></tr><tr><td onclick="clkwhite();"></td><td id="clk20" onclick="clk(20)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk21" onclick="clk(21)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk22" onclick="clk(22)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk23" onclick="clk(23)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk24" onclick="clk(24)" align="left" valign="top"></td></tr><tr><td id="clk25" onclick="clk(25)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk26" onclick="clk(26)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk27" onclick="clk(27)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk28" onclick="clk(28)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk29" onclick="clk(29)" align="left" valign="top"></td><td onclick="clkwhite();"></td></tr><tr><td onclick="clkwhite();"></td><td id="clk30" onclick="clk(30)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk31" onclick="clk(31)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk32" onclick="clk(32)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk33" onclick="clk(33)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk34" onclick="clk(34)" align="left" valign="top"></td></tr><tr><td id="clk35" onclick="clk(35)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk36" onclick="clk(36)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk37" onclick="clk(37)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk38" onclick="clk(38)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk39" onclick="clk(39)" align="left" valign="top"></td><td onclick="clkwhite();"></td></tr><tr><td onclick="clkwhite();"></td><td id="clk40" onclick="clk(40)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk41" onclick="clk(41)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk42" onclick="clk(42)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk43" onclick="clk(43)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk44" onclick="clk(44)" align="left" valign="top"></td></tr><tr><td id="clk45" onclick="clk(45)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk46" onclick="clk(46)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk47" onclick="clk(47)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk48" onclick="clk(48)" align="left" valign="top"></td><td onclick="clkwhite();"></td><td id="clk49" onclick="clk(49)" align="left" valign="top"></td><td onclick="clkwhite();"></td></tr></table></div>
+<div id="foot">
+<img src="images/copy.png">
+</div>
+	<div id="out"></div>
+</body>
+</html>
